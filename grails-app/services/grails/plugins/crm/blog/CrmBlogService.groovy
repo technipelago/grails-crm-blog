@@ -83,10 +83,7 @@ class CrmBlogService {
     def listBlogPosts(Map query, Map params) {
         def tagged
         if (query.tags) {
-            tagged = crmTagService.findAllByTag(CrmBlogPost, query.tags).collect { it.id }
-            if (!tagged) {
-                tagged = [0L] // Force no search result.
-            }
+            tagged = crmTagService.findAllIdByTag(CrmBlogPost, query.tags) ?: [0L]
         }
 
         CrmBlogPost.createCriteria().list(params) {
