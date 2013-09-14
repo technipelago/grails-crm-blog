@@ -15,21 +15,12 @@
  *  under the License.
  */
 
-import org.codehaus.groovy.grails.commons.GrailsClassUtils
-
-import org.springframework.web.multipart.commons.CommonsMultipartFile
-
 class CrmBlogGrailsPlugin {
-    // Dependency group
     def groupId = "grails.crm"
-    // the plugin version
     def version = "1.0-SNAPSHOT"
-    // the version or versions of Grails the plugin is designed for
     def grailsVersion = "2.2 > *"
-    // the other plugins this plugin depends on
     def dependsOn = [:]
     def loadAfter = ['crmContent']
-    // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/domain/grails/plugins/crm/blog/TestContentEntity.groovy",
             "src/groovy/grails/plugins/crm/blog/TestSecurityDelegate.groovy",
@@ -40,21 +31,11 @@ class CrmBlogGrailsPlugin {
     def author = "Goran Ehrsson"
     def authorEmail = "goran@technipelago.se"
     def description = '''\
-This plugin provide storage and services for managing blogs in Grails CRM.
+This plugin provide storage and services for managing blogs or other public content in Grails CRM.
 '''
     def documentation = "http://grails.org/plugin/crm-blog"
     def license = "APACHE"
     def organization = [name: "Technipelago AB", url: "http://www.technipelago.se/"]
     def issueManagement = [system: "github", url: "https://github.com/goeh/grails-crm-blog/issues"]
     def scm = [url: "https://github.com/goeh/grails-crm-blog"]
-
-    def doWithSpring = {
-    }
-
-    def doWithDynamicMethods = { ctx ->
-    }
-
-    def doWithApplicationContext = { applicationContext ->
-    }
-
 }

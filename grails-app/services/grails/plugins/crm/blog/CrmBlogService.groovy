@@ -4,6 +4,7 @@ import grails.events.Listener
 import grails.plugins.crm.core.DateUtils
 import grails.plugins.crm.core.SearchUtils
 import grails.plugins.crm.core.TenantUtils
+import groovy.transform.CompileStatic
 import org.codehaus.groovy.grails.web.metaclass.BindDynamicMethod
 
 class CrmBlogService {
@@ -190,7 +191,8 @@ class CrmBlogService {
         status.delete()
     }
 
-    private String paramify(String name, Integer maxSize = 20) {
+    @CompileStatic
+    private String paramify(final String name, Integer maxSize = 20) {
         def param = name.toLowerCase().replace(' ', '-')
         if (param.length() > maxSize) {
             param = param[0..(maxSize - 1)]
