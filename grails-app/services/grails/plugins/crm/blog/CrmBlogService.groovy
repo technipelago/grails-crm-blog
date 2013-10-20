@@ -151,12 +151,20 @@ class CrmBlogService {
         return m
     }
 
+    CrmBlogPost getBlogPost(Long id) {
+        CrmBlogPost.findByIdAndTenantId(id, TenantUtils.tenant, [cache: true])
+    }
+
+    CrmBlogPost findByName(String name) {
+        CrmBlogPost.findByNameAndTenantId(name, TenantUtils.tenant, [cache: true])
+    }
+
     def listBlogStatus(Map params = [:]) {
         CrmBlogStatus.findAllByTenantId(TenantUtils.tenant, params)
     }
 
     CrmBlogStatus getBlogStatus(String param) {
-        CrmBlogStatus.findByParamAndTenantId(param, TenantUtils.tenant)
+        CrmBlogStatus.findByParamAndTenantId(param, TenantUtils.tenant, [cache: true])
     }
 
     CrmBlogStatus createBlogStatus(Map params, boolean save = false) {
