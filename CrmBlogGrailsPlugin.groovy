@@ -17,7 +17,7 @@
 
 class CrmBlogGrailsPlugin {
     def groupId = "grails.crm"
-    def version = "1.0.0"
+    def version = "1.0.1-SNAPSHOT"
     def grailsVersion = "2.2 > *"
     def dependsOn = [:]
     def loadAfter = ['crmContent']
