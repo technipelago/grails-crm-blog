@@ -13,3 +13,16 @@ With CRM we mean features like:
 
 ## Blog Support
 This plugin provides domain classes and services for blog/newsletter authoring in Grails CRM.
+For a user interface see the [crm-blog-ui](https://github.com/technipelago/grails-crm-blog-ui) plugin.
+
+## Examples
+
+    def draft = crmBlogService.createBlogStatus(name: 'Draft', param: 'draft', true)
+    def published = crmBlogService.createBlogStatus(name: 'Published', param: 'published', true)
+    def archived = crmBlogService.createBlogStatus(name: 'Archived', param: 'archived', true)
+
+    def post = crmBlogService.createBlogPost(status: published, title: 'Grails CRM', description: "I'm very proud to present my latest project", true)
+
+    post.setTagValue('groovy').setTagValue('grails').setTagValue('crm')
+
+    crmContentService.createResource('<h1>Grails CRM</h1><p>Lorem ipsum... This is the actual content posted to the blog.</p>', 'content.html', post)
