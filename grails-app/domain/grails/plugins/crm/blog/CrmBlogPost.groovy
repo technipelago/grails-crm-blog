@@ -56,7 +56,7 @@ class CrmBlogPost {
         if (date == null) {
             date = new Date()
         }
-        if (name == null && title != null) {
+        if (title && !name) {
             name = normalizeName(title)
         }
     }
