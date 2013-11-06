@@ -17,7 +17,7 @@
 
 class CrmBlogGrailsPlugin {
     def groupId = "grails.crm"
-    def version = "1.0.1"
+    def version = "1.0.2"
     def grailsVersion = "2.2 > *"
     def dependsOn = [:]
     def loadAfter = ['crmContent']
@@ -27,15 +27,15 @@ class CrmBlogGrailsPlugin {
             "src/templates/text/**",
             "grails-app/views/error.gsp"
     ]
-    def title = "Blog Support for Grails CRM"
+    def title = "Blog Support for GR8 CRM"
     def author = "Goran Ehrsson"
     def authorEmail = "goran@technipelago.se"
     def description = '''\
-This plugin provide storage and services for managing blogs or other public content in Grails CRM.
+This plugin provide storage and services for managing blogs or other public content in GR8 CRM.
 '''
-    def documentation = "http://grails.org/plugin/crm-blog"
+    def documentation = "https://github.com/technipelago/grails-crm-blog"
     def license = "APACHE"
     def organization = [name: "Technipelago AB", url: "http://www.technipelago.se/"]
-    def issueManagement = [system: "github", url: "https://github.com/goeh/grails-crm-blog/issues"]
-    def scm = [url: "https://github.com/goeh/grails-crm-blog"]
+    def issueManagement = [system: "github", url: "https://github.com/technipelago/grails-crm-blog/issues"]
+    def scm = [url: "https://github.com/technipelago/grails-crm-blog"]
 }
