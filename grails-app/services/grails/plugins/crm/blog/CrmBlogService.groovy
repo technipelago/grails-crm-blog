@@ -1,6 +1,7 @@
 package grails.plugins.crm.blog
 
 import grails.events.Listener
+import grails.plugins.crm.content.CrmResourceRef
 import grails.plugins.crm.core.DateUtils
 import grails.plugins.crm.core.SearchUtils
 import grails.plugins.crm.core.TenantUtils
@@ -10,6 +11,7 @@ import org.codehaus.groovy.grails.web.metaclass.BindDynamicMethod
 class CrmBlogService {
 
     def crmSecurityService
+    def crmContentService
     def crmTagService
     def messageSource
 
@@ -157,6 +159,10 @@ class CrmBlogService {
 
     CrmBlogPost findByName(String name) {
         CrmBlogPost.findByNameAndTenantId(name, TenantUtils.tenant, [cache: true])
+    }
+
+    CrmResourceRef getBlogContent(final CrmBlogPost post, String contentName = 'content.html') {
+        crmContentService.findResourcesByReference(post, [name: contentName]).find { it }
     }
 
     def listBlogStatus(Map params = [:]) {
