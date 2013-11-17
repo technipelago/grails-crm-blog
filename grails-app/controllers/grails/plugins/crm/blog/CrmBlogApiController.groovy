@@ -86,7 +86,11 @@ class CrmBlogApiController {
     }
 
     private String getAbsoluteLink(post) {
-        def uri = grailsApplication.config.crm.api.blog.uri ?: '/api/blog/posts'
-        grailsLinkGenerator.link(uri: "$uri/${post.name.encodeAsURL()}", absolute: true)
+        def uri = grailsApplication.config.crm.api.blog.uri
+        if(uri) {
+            return "$uri/${post.name.encodeAsURL()}"
+        } else {
+            return grailsLinkGenerator.link(uri: "/api/blog/posts", absolute: true) + '/' + post.name.encodeAsURL()
+        }
     }
 }
