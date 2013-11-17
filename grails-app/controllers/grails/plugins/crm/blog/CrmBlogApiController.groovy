@@ -31,6 +31,7 @@ class CrmBlogApiController {
                     def result = post.dao
                     result.tags = result.tags()
                     result.href = getAbsoluteLink(post)
+                    result.url = grailsLinkGenerator.link(uri: '/blog/show', absolute: true) + '/' + post.name.encodeAsURL()
                     def content = crmBlogService.getBlogContent(post)
                     if (content) {
                         def metadata = content.metadata
@@ -70,6 +71,7 @@ class CrmBlogApiController {
                         [offset: params.offset ?: 0, limit: params.max ?: 10, sort: 'date', order: 'desc']).collect { post ->
                     def dao = post.dao
                     dao.href = getAbsoluteLink(post)
+                    dao.url = grailsLinkGenerator.link(uri: '/blog/show', absolute: true) + '/' + post.name.encodeAsURL()
                     dao.tags = dao.tags()
                     if (params.list('expand').contains('text')) {
                         dao.text = crmBlogService.getBlogContent(post)?.text
