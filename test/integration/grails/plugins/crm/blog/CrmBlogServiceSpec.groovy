@@ -8,6 +8,7 @@ import grails.plugins.crm.core.TenantUtils
  */
 class CrmBlogServiceSpec extends IntegrationSpec {
 
+    def grailsApplication
     def crmBlogService
 
     void "test archive status"() {
@@ -31,6 +32,7 @@ class CrmBlogServiceSpec extends IntegrationSpec {
     void "test archiving quartz job"() {
         given:
         def job = new CrmBlogStatusJob()
+        job.grailsApplication = grailsApplication
         job.crmBlogService = crmBlogService
 
         when:

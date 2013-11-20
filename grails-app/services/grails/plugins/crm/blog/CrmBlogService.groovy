@@ -26,6 +26,7 @@ import org.codehaus.groovy.grails.web.metaclass.BindDynamicMethod
 
 class CrmBlogService {
 
+    def grailsApplication
     def crmSecurityService
     def crmContentService
     def crmTagService
@@ -38,13 +39,14 @@ class CrmBlogService {
         if (!tenant) {
             throw new IllegalArgumentException("Cannot find tenant info for tenant [${event.tenant}], event=$event")
         }
+        def config = grailsApplication.config.crm.blog
         def locale = tenant.locale
         TenantUtils.withTenant(tenant.id) {
             crmTagService.createTag(name: CrmBlogPost.name, multiple: true)
 
-            createDefaultBlogStatus('draft', 'crmBlogStatus.name.draft', 'Draft', locale)
-            createDefaultBlogStatus('published', 'crmBlogStatus.name.published', 'Published', locale)
-            createDefaultBlogStatus('archived', 'crmBlogStatus.name.archived', 'Archived', locale)
+            createDefaultBlogStatus(config.status.draft ?: 'draft', 'crmBlogStatus.name.draft', 'Draft', locale)
+            createDefaultBlogStatus(config.status.published ?: 'published', 'crmBlogStatus.name.published', 'Published', locale)
+            createDefaultBlogStatus(config.status.archived ?: 'archived', 'crmBlogStatus.name.archived', 'Archived', locale)
         }
     }
 
@@ -234,7 +236,8 @@ class CrmBlogService {
     }
 
     boolean archiveBlogPost(CrmBlogPost post) {
-        def archived = CrmBlogStatus.findByParamAndTenantId('archived', post.tenantId, [cache: true])
+        def param = grailsApplication.config.crm.blog.status.archived ?: 'archived'
+        def archived = CrmBlogStatus.findByParamAndTenantId(param, post.tenantId, [cache: true])
         if (archived) {
             post.status = archived
             return true

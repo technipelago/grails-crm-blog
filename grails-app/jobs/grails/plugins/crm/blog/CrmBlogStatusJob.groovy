@@ -16,22 +16,28 @@
 
 package grails.plugins.crm.blog
 
+/**
+ * CrmBlogPost instances with properties visibleTo or visibleFrom set to before or after current time
+ * must have their status changed to 'archived'. This Quartz job takes care of that.
+ */
 class CrmBlogStatusJob {
     static triggers = {
-        simple name: 'crmBlogStatus', startDelay: 1000 * 60 * 2, repeatInterval: 1000 * 60 * 3 // every 3 minutes
-        cron name: 'crmBlogStatus', cronExpression: "0 15 0 * * ?" // every day at 00:15
+        simple name: 'crmBlogStatus', startDelay: 1000 * 60 * 17, repeatInterval: 1000 * 60 * 60 // every hour
+        //cron name: 'crmBlogStatus', cronExpression: "0 15 0 * * ?" // every day at 00:15
     }
 
     def group = 'crmBlog'
     def concurrent = false
 
+    def grailsApplication
     def crmBlogService
 
     def execute() {
+        final String publishedStatus = grailsApplication.config.crm.blog.status.published ?: 'published'
         final Date now = new Date()
         final List<CrmBlogPost> needsUpdate = CrmBlogPost.createCriteria().list() {
             status {
-                eq('param', 'published')
+                eq('param', publishedStatus)
             }
             or {
                 gt('visibleFrom', now)
