@@ -33,22 +33,24 @@ class CrmBlogStatusJob {
     def crmBlogService
 
     def execute() {
-        final String publishedStatus = grailsApplication.config.crm.blog.status.published ?: 'published'
-        final Date now = new Date()
-        final List<CrmBlogPost> needsUpdate = CrmBlogPost.createCriteria().list() {
-            status {
-                eq('param', publishedStatus)
+        if (grailsApplication.config.crm.blog.job.status.enabled) {
+            final String publishedStatus = grailsApplication.config.crm.blog.status.published ?: 'published'
+            final Date now = new Date()
+            final List<CrmBlogPost> needsUpdate = CrmBlogPost.createCriteria().list() {
+                status {
+                    eq('param', publishedStatus)
+                }
+                or {
+                    gt('visibleFrom', now)
+                    lt('visibleTo', now)
+                }
             }
-            or {
-                gt('visibleFrom', now)
-                lt('visibleTo', now)
-            }
-        }
-        for (post in needsUpdate) {
-            try {
-                crmBlogService.archiveBlogPost(post)
-            } catch (Exception e) {
-                log.error("Failed to update status on crmBlogPost@${post.id}", e)
+            for (post in needsUpdate) {
+                try {
+                    crmBlogService.archiveBlogPost(post)
+                } catch (Exception e) {
+                    log.error("Failed to update status on crmBlogPost@${post.id}", e)
+                }
             }
         }
     }
