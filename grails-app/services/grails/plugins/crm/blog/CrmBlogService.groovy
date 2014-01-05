@@ -193,7 +193,7 @@ class CrmBlogService {
 
     CrmBlogStatus createBlogStatus(Map params, boolean save = false) {
         def tenant = TenantUtils.tenant
-        if (!params.param) {
+        if (!params.param && params.name) {
             params.param = paramify(params.name, new CrmBlogStatus().constraints.param.maxSize)
         }
         def m = CrmBlogStatus.findByParamAndTenantId(params.param, tenant)
