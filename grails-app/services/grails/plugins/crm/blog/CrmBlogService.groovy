@@ -44,15 +44,15 @@ class CrmBlogService {
         TenantUtils.withTenant(tenant.id) {
             crmTagService.createTag(name: CrmBlogPost.name, multiple: true)
 
-            createDefaultBlogStatus(config.status.draft ?: 'draft', 'crmBlogStatus.name.draft', 'Draft', locale)
-            createDefaultBlogStatus(config.status.published ?: 'published', 'crmBlogStatus.name.published', 'Published', locale)
-            createDefaultBlogStatus(config.status.archived ?: 'archived', 'crmBlogStatus.name.archived', 'Archived', locale)
+            createDefaultBlogStatus(1, config.status.draft ?: 'draft', 'crmBlogStatus.name.draft', 'Draft', locale)
+            createDefaultBlogStatus(2, config.status.published ?: 'published', 'crmBlogStatus.name.published', 'Published', locale)
+            createDefaultBlogStatus(9, config.status.archived ?: 'archived', 'crmBlogStatus.name.archived', 'Archived', locale)
         }
     }
 
-    private CrmBlogStatus createDefaultBlogStatus(String param, String code, String defaultText, Locale locale) {
+    private CrmBlogStatus createDefaultBlogStatus(int orderIndex, String param, String code, String defaultText, Locale locale) {
         def s = messageSource.getMessage(code, null, defaultText, locale)
-        createBlogStatus(name: s, param: param).save(failOnError: true)
+        createBlogStatus(orderIndex: orderIndex, name: s, param: param).save(failOnError: true)
     }
 
     @Listener(namespace = "crmTenant", topic = "requestDelete")
@@ -68,7 +68,9 @@ class CrmBlogService {
     def deleteTenant(event) {
         def tenant = event.id
         def result = CrmBlogPost.findAllByTenantId(tenant)
-        result*.delete()
+        for(post in result) {
+            deleteBlogPost(post)
+        }
         CrmBlogStatus.findAllByTenantId(tenant)*.delete()
         log.warn("Deleted ${result.size()} blog posts in tenant $tenant")
     }
@@ -144,12 +146,12 @@ class CrmBlogService {
                 between('date', d1, d2)
             } else if (query.fromDate) {
                 def timezone = query.timezone ?: TimeZone.getDefault()
-                def d1 = DateUtils.parseDate(query.fromDate, timezone)
+                def d1 = query.fromDate instanceof Date ? query.fromDate : DateUtils.parseDate(query.fromDate, timezone)
                 d1.clearTime()
                 ge('date', d1)
             } else if (query.toDate) {
                 def timezone = query.timezone ?: TimeZone.getDefault()
-                def d2 = DateUtils.parseDate(query.toDate, timezone)
+                def d2 = query.toDate instanceof Date ? query.toDate : DateUtils.parseDate(query.toDate, timezone)
                 d2 = DateUtils.getDateSpan(d2)[1]
                 le('date', d2)
             }
@@ -169,6 +171,32 @@ class CrmBlogService {
             m.clearErrors()
         }
         return m
+    }
+
+    boolean archiveBlogPost(CrmBlogPost post) {
+        def param = grailsApplication.config.crm.blog.status.archived ?: 'archived'
+        def archived = CrmBlogStatus.findByParamAndTenantId(param, post.tenantId, [cache: true])
+        if (archived) {
+            post.status = archived
+            return true
+        }
+        log.warn "Cannot archive crmBlogPost@${post.id} because status [archived] is not available"
+        return false
+    }
+
+    String deleteBlogPost(CrmBlogPost crmBlogPost) {
+        def tenant = crmBlogPost.tenantId
+        def user = crmSecurityService.getCurrentUser()
+        def eventPayload = [tenant: tenant, id: crmBlogPost.id, user: user.username]
+        def resources = crmContentService.findResourcesByReference(crmBlogPost)
+        for(r in resources) {
+            crmContentService.deleteReference(r)
+        }
+        def tombstone = crmBlogPost.toString()
+        crmBlogPost.delete(flush: true)
+        log.debug "Deleted blog post [$tombstone] in tenant [$tenant]"
+        event(for: 'crmBlogPost', topic: 'deleted', data: eventPayload)
+        return tombstone
     }
 
     CrmBlogPost getBlogPost(Long id) {
@@ -235,14 +263,4 @@ class CrmBlogService {
         return param
     }
 
-    boolean archiveBlogPost(CrmBlogPost post) {
-        def param = grailsApplication.config.crm.blog.status.archived ?: 'archived'
-        def archived = CrmBlogStatus.findByParamAndTenantId(param, post.tenantId, [cache: true])
-        if (archived) {
-            post.status = archived
-            return true
-        }
-        log.warn "Cannot archive crmBlogPost@${post.id} because status [archived] is not available"
-        return false
-    }
 }
