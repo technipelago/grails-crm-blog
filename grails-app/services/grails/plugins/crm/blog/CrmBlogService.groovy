@@ -44,9 +44,9 @@ class CrmBlogService {
         TenantUtils.withTenant(tenant.id) {
             crmTagService.createTag(name: CrmBlogPost.name, multiple: true)
 
-            createDefaultBlogStatus(1, config.status.draft ?: 'draft', 'crmBlogStatus.name.draft', 'Draft', locale)
-            createDefaultBlogStatus(2, config.status.published ?: 'published', 'crmBlogStatus.name.published', 'Published', locale)
-            createDefaultBlogStatus(9, config.status.archived ?: 'archived', 'crmBlogStatus.name.archived', 'Archived', locale)
+            createDefaultBlogStatus(1, config.status.draft ?: CrmBlogStatus.DRAFT, 'crmBlogStatus.name.draft', 'Draft', locale)
+            createDefaultBlogStatus(2, config.status.published ?: CrmBlogStatus.PUBLISHED, 'crmBlogStatus.name.published', 'Published', locale)
+            createDefaultBlogStatus(9, config.status.archived ?: CrmBlogStatus.ARCHIVED, 'crmBlogStatus.name.archived', 'Archived', locale)
         }
     }
 
@@ -160,12 +160,33 @@ class CrmBlogService {
 
     CrmBlogPost createBlogPost(Map params, boolean save = false) {
         def tenant = TenantUtils.tenant
+        // If no status is specified, set it to "published".
+        if(! params.status) {
+            params.status = CrmBlogStatus.PUBLISHED
+        }
+        if(! (params.status instanceof CrmBlogStatus)) {
+            def status = getBlogStatus(params.status)
+            if(status) {
+                params.status = status
+            } else {
+                throw new IllegalArgumentException("Blog status [${params.status}] not found in tenant [${tenant}]")
+            }
+        }
+
         def m = new CrmBlogPost()
         def args = [m, params, [include: CrmBlogPost.BIND_WHITELIST]]
         new BindDynamicMethod().invoke(m, 'bind', args.toArray())
         m.tenantId = tenant
+
+        // If content is specified the domain instance must be saved before we can add content to it.
+        if(params.content && ! save) {
+            save = true
+        }
+
         if (save) {
-            m.save()
+            if(m.save() && params.content) {
+                crmContentService.createResource(params.content, "content.html", m)
+            }
         } else {
             m.validate()
             m.clearErrors()
