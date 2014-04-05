@@ -23,9 +23,15 @@ import grails.plugins.crm.core.CrmLookupEntity
  */
 class CrmBlogStatus extends CrmLookupEntity {
 
+    public static final String DRAFT = "draft"
+    public static final String PUBLISHED = "published"
+    public static final String ARCHIVED = "archived"
+
+    public static final List INACTIVE_STATUSES = [9, 19, 29, 39, 49, 59, 69, 79, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 199, 299, 399, 499, 599, 699, 799, 899, 999]
+
     static transients = ['active']
 
     boolean isActive() {
-        orderIndex.toString()[0] != '9'
+        !INACTIVE_STATUSES.contains(orderIndex)
     }
 }
