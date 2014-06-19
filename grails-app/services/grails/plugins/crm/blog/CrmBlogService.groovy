@@ -21,6 +21,7 @@ import grails.plugins.crm.content.CrmResourceRef
 import grails.plugins.crm.core.DateUtils
 import grails.plugins.crm.core.SearchUtils
 import grails.plugins.crm.core.TenantUtils
+import grails.plugins.selection.Selectable
 import groovy.transform.CompileStatic
 import org.codehaus.groovy.grails.web.metaclass.BindDynamicMethod
 
@@ -81,6 +82,7 @@ class CrmBlogService {
      * @param params pagination parameters
      * @return List of CrmBlogPost domain instances
      */
+    @Selectable
     def list(Map params = [:]) {
         listBlogPosts([:], params)
     }
@@ -92,6 +94,7 @@ class CrmBlogService {
      * @param params pagination parameters
      * @return List of CrmBlogPost domain instances
      */
+    @Selectable
     def list(Map query, Map params) {
         listBlogPosts(query, params)
     }
