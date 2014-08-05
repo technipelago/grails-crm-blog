@@ -1,16 +1,13 @@
-grails.project.work.dir = "target"
+grails.project.class.dir = "target/classes"
+grails.project.test.class.dir = "target/test-classes"
+grails.project.test.reports.dir = "target/test-reports"
 grails.project.target.level = 1.6
-
-grails.project.repos.default = "crm"
 
 grails.project.dependency.resolution = {
     inherits("global") {}
     log "warn"
     legacyResolve false
     repositories {
-        grailsHome()
-        mavenRepo "http://labs.technipelago.se/repo/crm-releases-local/"
-        mavenRepo "http://labs.technipelago.se/repo/plugins-releases-local/"
         grailsCentral()
         mavenCentral()
     }
@@ -34,11 +31,12 @@ grails.project.dependency.resolution = {
         test(":code-coverage:1.2.7") { export = false }
 
         compile ":cache-ehcache:1.0.0"
-        compile ":selection:0.9.5"
-        compile "grails.crm:crm-core:latest.integration"
-        compile "grails.crm:crm-content:latest.integration"
-        compile "grails.crm:crm-security:latest.integration"
-        compile "grails.crm:crm-tags:latest.integration"
+        compile ":selection:0.9.7"
+
+        compile ":crm-core:2.0.1"
+        compile ":crm-content:2.0.0"
+        compile ":crm-security:2.0.0"
+        compile ":crm-tags:2.0.0"
     }
 }
 
