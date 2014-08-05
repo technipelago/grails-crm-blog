@@ -32,10 +32,64 @@ that focus on one specific domain, for example *contact*, *project* or *document
 
 == Blog Services Plugin
 
-This plugin provide storage and services for managing blogs in {gr8crm} applications.
+This plugin provide storage and services for managing blogs in {gr8crm} applications. A blog post is just a HTML document
+with some extra properties. You could probably use the http://gr8crm.github.io/plugins/crm-content/[crm-content] plugin
+to write blog posts and publish on a web page but the +crm-blog+ plugin together with +crm-blog-ui+ makes blog authoring much easier.
+
+The +crm-blog+ plugin does not duplicate code or features in +crm-content+ plugin.
+Instead it depends on +crm-content+ and delegate much of the storage and rendering to +crm-content+.
 
 Note that this plugin does not contain any user interface components. This plugin contains domain classes and services only.
 The plugin http://gr8crm.github.io/plugins/crm-blog-ui/[crm-blog-ui] provides a Twitter Bootstrap based user interface for blog authors.
+
+== Domain model
+
+image:blog-domain.png[Blog domain model]
+
+== CrmBlogService
+
+The +CrmBlogService+ provide methods for creation and management of blog posts.
+
+=== Create a new blog post
+
++CrmBlogPost createBlogPost(Map params, boolean save = false)+
+
+To create a new blog post you call +createBlogPost+ with a +Map+ of values. The +save+ parameter controls if
+the blog post should be persisted immediately or just initialized with values.
+
+=== Retrieve a blog post
+
++CrmBlogPost getBlogPost(Long id)+
+
+To retrieve a blog post by it's primary key you can use getBlogPost().
+
+=== Search for blog posts
+
++def list(Map query, Map params)+
+
+Query blog posts with the list() method.
+
+The following key kan be used in the +query+ map.
+Pagination and sorting keys goes into the +params+ map.
+
+- title (wildcard)
+- username
+- status (wildcard)
+- fromDate (date)
+- toDate (date)
+
+=== Archive an old blog post
+
++boolean archiveBlogPost(CrmBlogPost post)+
+
+This method sets the status to *archived*. This is a special +CrmBlogStatus+ with the +param+ property set to *archived*.
+You can change the parameter to something else with the configuration option +crm.blog.status.archived+.
+
+=== Delete a blog post
+
++String deleteBlogPost(CrmBlogPost crmBlogPost)+
+
+Deletes a blog post. The blog post +toString()+ value is returned after successful deletion.
 
 == Changes
 
