@@ -1,6 +1,7 @@
 # Ignore Intellij IDEA files
 .idea
 *.iml
+.gradle
 
 # Ignore build artifacts
 target
@@ -12,3 +13,4 @@ tomcat.*
 stacktrace.log
 plugin.xml
 0
+/cobertura.ser
