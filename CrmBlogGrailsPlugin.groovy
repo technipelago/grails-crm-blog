@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 Goran Ehrsson.
+ *  Copyright 2015 Goran Ehrsson.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 class CrmBlogGrailsPlugin {
     def groupId = "grails.crm"
-    def version = "1.3.0"
+    def version = "1.4.0-SNAPSHOT"
     def grailsVersion = "2.2 > *"
     def dependsOn = [:]
     def loadAfter = ['crmContent']

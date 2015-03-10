@@ -1,6 +1,6 @@
 package grails.plugins.crm.blog
 
-import grails.plugin.spock.IntegrationSpec
+import grails.test.spock.IntegrationSpec
 import grails.plugins.crm.core.TenantUtils
 
 /**
