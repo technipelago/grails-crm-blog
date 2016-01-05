@@ -1,8 +1,8 @@
-# Grails CRM - Blog Support
+# GR8 CRM - Blog Support
 
 CRM = [Customer Relationship Management](http://en.wikipedia.org/wiki/Customer_relationship_management)
 
-Grails CRM is a set of [Grails Web Application Framework](http://www.grails.org/)
+GR8 CRM is a set of [Grails Web Application Framework](http://www.grails.org/)
 plugins that makes it easy to develop web application with CRM functionality.
 With CRM we mean features like:
 
@@ -12,6 +12,7 @@ With CRM we mean features like:
 
 
 ## Blog Support
+
 This plugin provides domain classes and services for blog/newsletter authoring in GR8 CRM applications.
 For a user interface see the [crm-blog-ui](https://github.com/technipelago/grails-crm-blog-ui) plugin.
 
