@@ -42,7 +42,7 @@ Instead it depends on +crm-content+ and delegate much of the storage and renderi
 Note that this plugin does not contain any user interface components. This plugin contains domain classes and services only.
 The plugin http://gr8crm.github.io/plugins/crm-blog-ui/[crm-blog-ui] provides a Twitter Bootstrap based user interface for blog authors.
 
-Rendering blog posts
+=== Rendering blog posts
 
 To render blog posts in a GSP page you can use the *crm:blogPosts* tag.
 It iterates over all published blog posts and render it's content on the page.
@@ -81,7 +81,7 @@ The following example show that:
 
 The example above render something like this:
 
-image::blog-view.png[role="thumb"]
+image::blog-view.png
 
 The *crm:blogPosts* tag is included in the *crm-blog* plugin so you could create a Grails application
 that serves a public web site and include the crm-blog plugin to render blog posts.
