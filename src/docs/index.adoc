@@ -42,6 +42,53 @@ Instead it depends on +crm-content+ and delegate much of the storage and renderi
 Note that this plugin does not contain any user interface components. This plugin contains domain classes and services only.
 The plugin http://gr8crm.github.io/plugins/crm-blog-ui/[crm-blog-ui] provides a Twitter Bootstrap based user interface for blog authors.
 
+Rendering blog posts
+
+To render blog posts in a GSP page you can use the *crm:blogPosts* tag.
+It iterates over all published blog posts and render it's content on the page.
+The following example show that:
+
+[source,html]
+.blog/index.gsp
+----
+<crm:blogPosts var="post" query="${[status: 'published']}" params="${[max: 20, sort: 'date', order: 'desc']}">
+    <div class="crm-blog-post" id="${post.name}">
+        <g:link action="show" id="${post.name}"><h2>${post.title.encodeAsHTML()}</h2></g:link>
+
+        <p class="lead">${post.description?.encodeAsHTML()}</p>
+
+        <div>
+            <span class="muted" style="font-size: 12px;">
+                Published <g:formatDate format="d MMM yyyy" date="${post.date}"/>
+            </span>
+        </div>
+
+        <div class="crm-blog-body">
+            <crm:render template="${post.template}" parser="${post.parser}" model="${post}"/>
+        </div>
+
+        <p class="crm-blog-tags">
+            <span class="muted">Tags:</span>
+            <g:each in="${post.tags()}" var="tag">
+                <span class="label label-info">${tag.encodeAsHTML()}</span>
+            </g:each>
+        </p>
+
+        <hr/>
+    </div>
+</crm:blogPosts>
+----
+
+The example above render something like this:
+
+image::blog-view.png[role="thumb"]
+
+The *crm:blogPosts* tag is included in the *crm-blog* plugin so you could create a Grails application
+that serves a public web site and include the crm-blog plugin to render blog posts.
+Then you could create another Grails application and include the *crm-blog-ui* plugin to get all the blog editing
+features that your blog authors use to create content.
+Or you can include both plugins in the same application if it's a small project with limited requirements.
+
 == Domain model
 
 image:blog-domain.png[Blog domain model]
@@ -54,8 +101,19 @@ The +CrmBlogService+ provide methods for creation and management of blog posts.
 
 +CrmBlogPost createBlogPost(Map params, boolean save = false)+
 
+    def published = crmBlogService.createBlogStatus(name: "Published", true)
+    def post = crmBlogService.createBlogPost(status: published, name: "test",
+            title: "Test post", description: "This is my first test", date: new Date(), true)
+
 To create a new blog post you call +createBlogPost+ with a +Map+ of values. The +save+ parameter controls if
 the blog post should be persisted immediately or just initialized with values.
+This does only create the metadata for the blog post. The actual HTML content is created separately.
+
+    crmContentService.createResource('<h1>TEST</h1><p>Hello World</p>', 'content.html', post, [contentType: 'text/html'])
+
+You see that we leverage *crmContentService* from the *crm-content* plugin. That plugin is automatically included
+by the *crm-blog* plugin with a compile-time dependency. So all features in *crm-content* are available when you
+use the *crm-blog* plugin.
 
 === Retrieve a blog post
 
