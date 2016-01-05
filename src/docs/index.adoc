@@ -93,7 +93,7 @@ Deletes a blog post. The blog post +toString()+ value is returned after successf
 
 == Changes
 
-2.0.0:: First public release
+2.4.0:: First public release
 
 == License
 
@@ -102,3 +102,9 @@ Deletes a blog post. The blog post +toString()+ value is returned after successf
 == Source Code
 
 The source code for this plugin is available at {gr8source}
+
+== Contributing
+
+Please report {gr8source}/issues[issues or suggestions].
+
+Want to improve the plugin: Fork the {gr8source}[repository] and send a pull request.
