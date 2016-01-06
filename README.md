@@ -27,3 +27,7 @@ For a user interface see the [crm-blog-ui](https://github.com/technipelago/grail
     post.setTagValue('groovy').setTagValue('grails').setTagValue('crm')
 
     crmContentService.createResource('<h1>GR8 CRM</h1><p>Lorem ipsum... This is the actual content posted to the blog.</p>', 'content.html', post)
+
+## Documentation
+
+Complete documentation for this plugin can be found at [gr8crm.github.io](http://gr8crm.github.io/plugins/crm-blog/)
