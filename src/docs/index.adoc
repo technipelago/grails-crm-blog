@@ -151,6 +151,7 @@ Deletes a blog post. The blog post +toString()+ value is returned after successf
 
 == Changes
 
+2.4.1:: Plugin upgraded to Grails 2.4.5
 2.4.0:: First public release
 
 == License
