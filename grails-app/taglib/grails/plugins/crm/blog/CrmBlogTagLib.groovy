@@ -10,6 +10,7 @@ class CrmBlogTagLib {
     static namespace = "crm"
 
     def grailsApplication
+    def crmCoreService
     def crmBlogService
     def crmContentService
 
@@ -31,6 +32,7 @@ class CrmBlogTagLib {
             int i = 0
             for (post in result) {
                 def map = post.dao
+                map.reference = crmCoreService.getReferenceIdentifier(post)
                 map.template = { crmContentService.findResourcesByReference(post, [name: (attrs.template ?: 'content.html')]).find { it } }
                 def model = [(attrs.var ?: 'it'): map]
                 if (attrs.status) {
@@ -47,6 +49,7 @@ class CrmBlogTagLib {
             throwTagError("Tag [blogPost] is missing required attribute [post]")
         }
         def map = post.dao
+        map.reference = crmCoreService.getReferenceIdentifier(post)
         map.template = { crmContentService.findResourcesByReference(post, [name: (attrs.template ?: 'content.html')]).find { it } }
         def model = [(attrs.var ?: 'it'): map]
         out << body(model)
