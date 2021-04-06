@@ -14,6 +14,28 @@ class CrmBlogTagLib {
     def crmBlogService
     def crmContentService
 
+    def blogPostsExists = { attrs, body ->
+        def tenant = attrs.tenant ? Long.valueOf(attrs.tenant) : (grailsApplication.config.crm.blog.defaultTenant ?: TenantUtils.tenant)
+        TenantUtils.withTenant(tenant) {
+            def query = attrs.query ?: [:]
+            def params = attrs.params ?: [:]
+            if (!params.sort) {
+                params.sort = 'date'
+            }
+            if (!params.order) {
+                params.order = 'desc'
+            }
+            if (query.status == null) {
+                query.status = (grailsApplication.config.crm.blog.defaultStatus ?: 'published')
+            }
+            def result = crmBlogService.list(query, params)
+            if (result.totalCount > 0) {
+                def model = [count: result.totalCount]
+                out << body(model)
+            }
+        }
+    }
+
     def blogPosts = { attrs, body ->
         def tenant = attrs.tenant ? Long.valueOf(attrs.tenant) : (grailsApplication.config.crm.blog.defaultTenant ?: TenantUtils.tenant)
         TenantUtils.withTenant(tenant) {
